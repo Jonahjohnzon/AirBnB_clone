@@ -5,13 +5,14 @@ import models
 from datetime import datetime
 from uuid import uuid4
 
+
 class BaseModel:
     """Class"""
 
     def __init__(self, *args, **kwargs):
         """intialize the class
         """
-        seif.id = str(uuid4())
+        self.id = str(uuid4())
         self.created_at = datetime.today()
         self.updated_at = datetime.today()
 
