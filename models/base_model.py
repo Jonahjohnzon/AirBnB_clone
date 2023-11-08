@@ -35,5 +35,9 @@ class BaseModel:
         return "[{}] ({}) {}".format(classname,  self.id, self.__dict__)
 
     def to_dict(self):
-        
-
+        """Return dictinry of Basemodel"""
+        diction = self.__dict__.copy()
+        diction["created_at"] = self.created_at.isoformat()
+        diction["updated_at"] = self.updated_at.isoformat()
+        diction["__class__"] = self.__class__.__name__
+        return diction
