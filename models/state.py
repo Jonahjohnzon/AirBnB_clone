@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Defines the State class inherited from BaseModel."""
-target = __import__("models.base_model")
-BaseModel = target
+from models.base_model import BaseModel
 
 class State(BaseModel):
     """Represent a state.

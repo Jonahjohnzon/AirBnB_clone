@@ -15,14 +15,14 @@ class BaseModel:
         self.created_at = datetime.today()
         self.updated_at = datetime.today()
 
-        if (len(kwargs) == 0):
-            models.storage.new(self)
-        else:
-            for x,y in kwargs.items():
+        if (len(kwargs) != 0):
+            for x, y in kwargs.items():
                 if (x == "created_at" or x == "updated_at"):
                     self.__dict__[x] = datetime.strptime(y, "%Y-%m-%dT%H:%M:%S.%f")
                 else:
                     self.__dict__[x] = y
+        else:
+            models.storage.new(self)
 
     def save(self):
         """change updated_at to curren time"""

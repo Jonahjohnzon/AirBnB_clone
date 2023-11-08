@@ -57,11 +57,11 @@ class HBNBCommand(cmd.Cmd):
     def default(self, arg):
         """Default behavior for cmd module when input is invalid"""
         argdict = {
-            "create": do_create,
-            "show": do_show,
-            "destroy": do_destroy,
-            "all": do_all,
-            "update": do_update
+            "create": self.do_create,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "all": self.do_all,
+            "update": self.do_update
         }
         match = re.search(r"\.", arg)
         if match is not None:
@@ -87,31 +87,31 @@ class HBNBCommand(cmd.Cmd):
         return True # Return True to exit the cmd loop
     
     # Define a function to execute the create command
-    def do_create(args):
+    def do_create(argl):
         """Usage: create <class>
         Create a new class instance and print its id.
         """
-        args = parse(arg)
+        args = parse(argl)
         if len(args) == 0:
             print("** class name missing **")
             return
-        class_name = args[0]
-        if class_name not in HBNBCommand.__classes:
+        classname = args[0]
+        if classname not in HBNBCommand.__classes:
             print("** class doesn't exist **")
             return
         # Create a new instance of the class
-        instance = classesclass_name
+        instance = classname
         # Save the instance to the JSON file
         instance.save()
         # Print the id of the instance
         print(instance.id)
 
     # Define a function to execute the show command
-    def do_show(args):
+    def do_show(argl):
         """Usage: <class>.show(<id>)
         Display the string representation of a class instance of a given id.
         """
-        args = parse(arg)
+        args = parse(argl)
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -134,11 +134,11 @@ class HBNBCommand(cmd.Cmd):
         print(instance)
 
     # Define a function to execute the destroy command
-    def do_destroy(args):
+    def do_destroy(argl):
         """Usage: <class>.destroy(<id>)
         Delete a class instance of a given id.
         """
-        args = parse(arg)
+        args = parse(argl)
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -162,11 +162,11 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
         
     # Define a function to execute the all command
-    def do_all(args):
+    def do_all(argl):
         """Usage: <class>.all()
         Display string representations of all instances of a given class.
         If no class is specified, displays all instantiated objects."""
-        args = parse(arg)
+        args = parse(argl)
         if len(args) == 0:
             # Print all instances
             instances = storage.all().values()
@@ -184,13 +184,13 @@ class HBNBCommand(cmd.Cmd):
             print(strings)
 
     # Define a function to execute the update command
-    def do_update(args):
+    def do_update(argl):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
         <class>.update(<id>, <attribute_name>, <attribute_value>) or
         <class>.update(<id>, <dictionary>)
         Update a class instance of a given id by adding or updating
         a given attribute key/value pair or dictionary."""
-        args = parse(arg)
+        args = parse(argl)
         if len(args) == 0:
             print("** class name missing **")
             return
