@@ -32,7 +32,7 @@ class BaseModel:
     def __str__(self):
         """print: [<class name>] (<self.id>) <self.__dict__>"""
         classname = self.__class__.__name__
-        return "[{}] ({}) {}".format(classname,  self.id, self.__dict__)
+        return "[{}] ({}) {}".format(classname, self.id, self.__dict__)
 
     def to_dict(self):
         """Return dictinry of Basemodel"""
