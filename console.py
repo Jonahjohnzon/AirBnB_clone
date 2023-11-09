@@ -86,10 +86,10 @@ class HBNBCommand(cmd.Cmd):
         print("") # Print a newline
         return True # Return True to exit the cmd loop
     
-    # Define a function to execute the create command
-    def do_create(argl):
+    # Define  function to execute the create command
+    def do_create(self, argl):
         """Usage: create <class>
-        Create a new class instance and print its id.
+        Create a new class and print its id.
         """
         args = parse(argl)
         if len(args) == 0:
@@ -106,8 +106,8 @@ class HBNBCommand(cmd.Cmd):
         # Print the id of the instance
         print(instance.id)
 
-    # Define a function to execute the show command
-    def do_show(argl):
+    # Define  function to execute the show command
+    def do_show(self, argl):
         """Usage: <class>.show(<id>)
         Display the string representation of a class instance of a given id.
         """
@@ -133,8 +133,8 @@ class HBNBCommand(cmd.Cmd):
         instance = storage.all()[key]
         print(instance)
 
-    # Define a function to execute the destroy command
-    def do_destroy(argl):
+    # Define function to execute the destroy command
+    def do_destroy(self, argl):
         """Usage: <class>.destroy(<id>)
         Delete a class instance of a given id.
         """
@@ -161,11 +161,11 @@ class HBNBCommand(cmd.Cmd):
         # Save the changes
         storage.save()
         
-    # Define a function to execute the all command
-    def do_all(argl):
+    # Define function to execute the all command
+    def do_all(self, argl):
         """Usage: <class>.all()
-        Display string representations of all instances of a given class.
-        If no class is specified, displays all instantiated objects."""
+        Show string representations of all instances of a given class.
+        If no class is specified, displays  instantiated objects."""
         args = parse(argl)
         if len(args) == 0:
             # Print all instances
@@ -184,7 +184,7 @@ class HBNBCommand(cmd.Cmd):
             print(strings)
 
     # Define a function to execute the update command
-    def do_update(argl):
+    def do_update(self, argl):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
         <class>.update(<id>, <attribute_name>, <attribute_value>) or
         <class>.update(<id>, <dictionary>)
