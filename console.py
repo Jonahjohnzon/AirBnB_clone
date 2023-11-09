@@ -154,11 +154,11 @@ class HBNBCommand(cmd.Cmd):
         # Check if the instance exists
         instance_id = args[1]
         key = class_name + "." + instance_id
-        if key not in storage.all():
+        if "{}.{}".format(class_name, instance_id) not in storage.all().keys():
             print("** no instance found **")
             return
         # Delete the instance from the JSON file
-        storage.delete(storage.all()[key])
+        del storage.all()["{}.{}".format(class_name, args[1])]
         # Save the changes
         storage.save()
         
