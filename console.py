@@ -61,7 +61,8 @@ class HBNBCommand(cmd.Cmd):
             "show": self.do_show,
             "destroy": self.do_destroy,
             "all": self.do_all,
-            "update": self.do_update
+            "update": self.do_update,
+            "count" : self.do_count
         }
         match = re.search(r"\.", arg)
         if match is not None:
@@ -234,6 +235,14 @@ class HBNBCommand(cmd.Cmd):
                 # Save the changes to the JSON file
                 instance.save()
 
+    def do_count(self, arg):
+        """Use: Get the number of instances"""
+        argss = parse(arg)
+        number = 0
+        for user in storage.all().values():
+            if argss[0] == user.__class__.__name__:
+                number += 1
+        print(number)
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
