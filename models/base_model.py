@@ -14,12 +14,13 @@ class BaseModel:
         """
         self.id = str(uuid4())
         self.created_at = datetime.today()
+        fo = "%Y-%m-%dT%H:%M:%S.%f"
         self.updated_at = datetime.today()
 
         if (len(kwargs) != 0):
             for x, y in kwargs.items():
                 if (x == "created_at" or x == "updated_at"):
-                    self.__dict__[x] = datetime.strptime(y, "%Y-%m-%dT%H:%M:%S.%f")
+                    self.__dict__[x] = datetime.strptime(y, fo)
                 else:
                     self.__dict__[x] = y
         else:

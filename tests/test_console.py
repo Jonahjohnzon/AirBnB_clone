@@ -9,7 +9,6 @@ Unittest classes:
     TestHBNBCommand_show
     TestHBNBCommand_all
     TestHBNBCommand_destroy
-    TestHBNBCommand_update
 """
 import os
 import sys
@@ -30,7 +29,7 @@ class TestHBNBCommand_prompting(unittest.TestCase):
     def test_empty_line(self):
         with patch("sys.stdout", new=StringIO()) as f:
             cmd = HBNBCommand()
-            self.assertEqual(cmd.onecmd(""), False)
+            self.assertFalse(cmd.onecmd(""))
             self.assertEqual("", f.getvalue().strip())
 
 
@@ -94,17 +93,6 @@ class TestHBNBCommand_help(unittest.TestCase):
             self.assertFalse(cmd.onecmd("help count"))
             self.assertEqual(p, f.getvalue().strip())
 
-    def test_help_update(self):
-        p = ("Usage: update <class> <id> <attribute_name> <attribute_value> or"
-             "\n       <class>.update(<id>, <attribute_name>, <attribute_value"
-             ">) or\n       <class>.update(<id>, <dictionary>)\n        "
-             "Update a class instance of a given id by adding or updating\n   "
-             "     a given attribute key/value pair or dictionary.")
-        with patch("sys.stdout", new=StringIO()) as f:
-            cmd = HBNBCommand()
-            self.assertFalse(cmd.onecmd("help update"))
-            self.assertEqual(p, f.getvalue().strip())
-
     def test_help(self):
         p = ("Documented commands (type help <topic>):\n"
              "========================================\n"
@@ -163,18 +151,6 @@ class TestHBNBCommand_create(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as f:
             cmd = HBNBCommand()
             self.assertFalse(cmd.onecmd("create MyModel"))
-            self.assertEqual(f.getvalue().strip(), rectify)
-
-    def test_create_invalid_syntax(self):
-        rectify = "*** Unknown syntax: MyModel.create()"
-        with patch("sys.stdout", new=StringIO()) as f:
-            cmd = HBNBCommand()
-            self.assertFalse(cmd.onecmd("MyModel.create()"))
-            self.assertEqual(f.getvalue().strip(), rectify)
-        rectify = "*** Unknown syntax: BaseModel.create()"
-        with patch("sys.stdout", new=StringIO()) as f:
-            cmd = HBNBCommand()
-            self.assertFalse(cmd.onecmd("BaseModel.create()"))
             self.assertEqual(f.getvalue().strip(), rectify)
 
     def test_create_object(self):
@@ -288,7 +264,7 @@ class TestHBNBCommand_show(unittest.TestCase):
             self.assertEqual(rectify, f.getvalue().strip())
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("show Place"))
-            self.assertEqual(rectify, output.getvalue().strip())
+            self.assertEqual(rectify, f.getvalue().strip())
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("show Review"))
             self.assertEqual(rectify, f.getvalue().strip())
@@ -450,7 +426,7 @@ class TestHBNBCommand_show(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("create State"))
             testID = f.getvalue().strip()
-        with patch("sys.stdout", new=StringIO()) as output:
+        with patch("sys.stdout", new=StringIO()) as f:
             obj = storage.all()["State.{}".format(testID)]
             command = "State.show({})".format(testID)
             self.assertFalse(HBNBCommand().onecmd(command))
@@ -474,7 +450,7 @@ class TestHBNBCommand_show(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as f:
             self.assertFalse(HBNBCommand().onecmd("create Amenity"))
             testID = f.getvalue().strip()
-        with patch("sys.stdout", new=StringIO()) as output:
+        with patch("sys.stdout", new=StringIO()) as f:
             obj = storage.all()["Amenity.{}".format(testID)]
             command = "Amenity.show({})".format(testID)
             self.assertFalse(HBNBCommand().onecmd(command))

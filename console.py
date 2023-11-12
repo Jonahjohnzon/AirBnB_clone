@@ -81,38 +81,32 @@ class HBNBCommand(cmd.Cmd):
 
     # Define a method to handle the quit command
     def do_quit(self, arg):
-        """Quit command to exit the program"""
+        """Quit command to exit the program."""
         return True
 
     # Define a method to handle the EOF (Ctrl-D) command
     def do_EOF(self, arg):
-        """EOF command to exit the program"""
+        """EOF signal to exit the program."""
         print("")
         return True
 
     # Define  function to execute the create command
-    def do_create(self, argl):
+    def do_create(self, arg):
         """Usage: create <class>
-        Create a new class and print its id.
+        Create a new class instance and print its id.
         """
-        args = parse(argl)
-        if len(args) == 0:
+        argss = parse(arg)
+        if len(argss) == 0:
             print("** class name missing **")
-            return
-        classname = args[0]
-        if classname not in HBNBCommand.__classes:
+        elif argss[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
-            return
-        # Create a new instance of the class
-        instance = classname
-        # Save the instance to the JSON file
-        instance.save()
-        # Print the id of the instance
-        print(instance.id)
+        else:
+            print(eval(argss[0])().id)
+            storage.save()
 
     # Define  function to execute the show command
     def do_show(self, argl):
-        """Usage: <class>.show(<id>)
+        """Usage: show <class> <id> or <class>.show(<id>)
         Display the string representation of a class instance of a given id.
         """
         args = parse(argl)
@@ -134,12 +128,12 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
             return
         # Print the string representation of the instance
-        instance = storage.all()[key]
-        print(instance)
+        instance = storage.all()
+        print(instance["{}.{}". format(args[0], args[1])])
 
     # Define function to execute the destroy command
     def do_destroy(self, argl):
-        """Usage: <class>.destroy(<id>)
+        """ Usage: destroy <class> <id> or <class>.destroy(<id>)
         Delete a class instance of a given id.
         """
         args = parse(argl)
@@ -167,28 +161,21 @@ class HBNBCommand(cmd.Cmd):
 
     # Define function to execute the all command
     def do_all(self, argl):
-        """Usage: <class>.all()
-        Show string representations of all instances of a given class.
-        If no class is specified, displays  instantiated objects."""
-        a = parse(argl)
-        if len(a) == 0:
-            # Print all instances
-            ins = storage.all().values()
+        """Usage: all or all <class> or <class>.all()
+        Display string representations of all instances of a given class.
+        If no class is specified, displays all instantiated objects."""
+        args = parse(argl)
+        if len(args) > 0 and args[0] not in HBNBCommand.__classes:
+            print("** class doesn't exist **")
         else:
-            # Check if the class name is valid
-            class_name = a[0]
-            if class_name not in HBNBCommand.__classes:
-                print("** class doesn't exist **")
-                return
-            # Print only instances of the given class
-            st = storage.all().values()
-            ins = [v for v in st if v.__class__.__name__ == a[0]]
-            # Convert the instances to a list of strings
-            strings = [str(i) for i in ins]
-            # Print the list of strings
-            print(strings)
+            objss = []
+            for ob in storage.all().values():
+                if len(args) > 0 and args[0] == ob.__class__.__name__:
+                    objss.append(ob.__str__())
+                elif len(args) == 0:
+                    objss.append(ob.__str__())
+            print(objss)
 
-    # Define a function to execute the update command
     def do_update(self, argl):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
         <class>.update(<id>, <attribute_name>, <attribute_value>) or
@@ -196,51 +183,50 @@ class HBNBCommand(cmd.Cmd):
         Update a class instance of a given id by adding or updating
         a given attribute key/value pair or dictionary."""
         args = parse(argl)
+        objt = storage.all()
+
         if len(args) == 0:
             print("** class name missing **")
-            return
-        class_name = args[0]
-        if class_name not in HBNBCommand.__classes:
+            return False
+        if args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
-            return
-        # Check if the id is given
+            return False
         if len(args) == 1:
             print("** instance id missing **")
-            return
-        # Check if the instance exists
-        instance_id = args[1]
-        key = class_name + "." + instance_id
-        if key not in storage.all():
+            return False
+        if "{}.{}".format(args[0], args[1]) not in objt.keys():
             print("** no instance found **")
-            return
-        # Check if the attribute name is given
+            return False
         if len(args) == 2:
             print("** attribute name missing **")
-            return
-        # Check if the attribute value is given
+            return False
         if len(args) == 3:
-            print("** value missing **")
-            return
-        # Get the instance and the attribute name and value
-        instance = storage.all()[key]
-        attr_name = args[2]
-        attr_value = args[3]
-        # Convert the attribute value to the correct type
-        try:
-            attr_value = int(attr_value)
-        except ValueError:
             try:
-                attr_value = float(attr_value)
-            except ValueError:
-                # Remove the quotes from the string value
-                attr_value = attr_value.strip("\"'")
-                # Update the attribute of the instance
-                setattr(instance, attr_name, attr_value)
-                # Save the changes to the JSON file
-                instance.save()
+                type(eval(args[2])) != dict
+            except NameError:
+                print("** value missing **")
+                return False
+        if len(args) == 4:
+            obj = objt["{}.{}".format(args[0], args[1])]
+            if args[2] in obj.__class__.__dict__.keys():
+                valtyp = type(obj.__class__.__dict__[args[2]])
+                obj.__dict__[args[2]] = valtyp(args[3])
+            else:
+                obj.__dict__[args[2]] = args[3]
+        elif type(eval(args[2])) == dict:
+            obj = objt["{}.{}".format(args[0], args[1])]
+            for k, v in eval(args[2]).items():
+                if (k in obj.__class__.__dict__.keys() and
+                        type(obj.__class__.__dict__[k]) in {str, int, float}):
+                    valtyp = type(obj.__class__.__dict__[k])
+                    obj.__dict__[k] = valtyp(v)
+                else:
+                    obj.__dict__[k] = v
+        storage.save()
 
     def do_count(self, arg):
-        """Use: Get the number of instances"""
+        """Usage: count <class> or <class>.count()
+        Retrieve the number of instances of a given class."""
         argss = parse(arg)
         number = 0
         for user in storage.all().values():

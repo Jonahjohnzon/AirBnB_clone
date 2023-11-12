@@ -2,6 +2,7 @@
 """Defines the State class inherited from BaseModel."""
 from models.base_model import BaseModel
 
+
 class State(BaseModel):
     """Represent a state.
 
