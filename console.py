@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+
+
 """Defines the HBnB console."""
 import cmd
 import re
@@ -29,6 +31,7 @@ def parse(arg):
         retl = [i.strip(",") for i in lexer]
         retl.append(curly_braces.group())
         return retl
+
 
 # Define a class that inherits from cmd.Cmd
 class HBNBCommand(cmd.Cmd):
@@ -62,7 +65,7 @@ class HBNBCommand(cmd.Cmd):
             "destroy": self.do_destroy,
             "all": self.do_all,
             "update": self.do_update,
-            "count" : self.do_count
+            "count": self.do_count
         }
         match = re.search(r"\.", arg)
         if match is not None:
@@ -79,14 +82,14 @@ class HBNBCommand(cmd.Cmd):
     # Define a method to handle the quit command
     def do_quit(self, arg):
         """Quit command to exit the program"""
-        return True # Return True to exit the cmd loop
+        return True
 
     # Define a method to handle the EOF (Ctrl-D) command
     def do_EOF(self, arg):
         """EOF command to exit the program"""
-        print("") # Print a newline
-        return True # Return True to exit the cmd loop
-    
+        print("")
+        return True
+
     # Define  function to execute the create command
     def do_create(self, argl):
         """Usage: create <class>
@@ -161,26 +164,27 @@ class HBNBCommand(cmd.Cmd):
         del storage.all()["{}.{}".format(class_name, args[1])]
         # Save the changes
         storage.save()
-        
+
     # Define function to execute the all command
     def do_all(self, argl):
         """Usage: <class>.all()
         Show string representations of all instances of a given class.
         If no class is specified, displays  instantiated objects."""
-        args = parse(argl)
-        if len(args) == 0:
+        a = parse(argl)
+        if len(a) == 0:
             # Print all instances
-            instances = storage.all().values()
+            ins = storage.all().values()
         else:
             # Check if the class name is valid
-            class_name = args[0]
+            class_name = a[0]
             if class_name not in HBNBCommand.__classes:
                 print("** class doesn't exist **")
                 return
             # Print only instances of the given class
-            instances = [v for v in storage.all().values() if v.__class__.__name__ == args[0]]
+            st = storage.all().values()
+            ins = [v for v in st if v.__class__.__name__ == a[0]]
             # Convert the instances to a list of strings
-            strings = [str(i) for i in instances]
+            strings = [str(i) for i in ins]
             # Print the list of strings
             print(strings)
 
@@ -196,7 +200,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         class_name = args[0]
-        if class_name not in HBNBCommand.__classes :
+        if class_name not in HBNBCommand.__classes:
             print("** class doesn't exist **")
             return
         # Check if the id is given
@@ -243,6 +247,7 @@ class HBNBCommand(cmd.Cmd):
             if argss[0] == user.__class__.__name__:
                 number += 1
         print(number)
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
